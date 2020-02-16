@@ -5,6 +5,14 @@ import (
 	"math"
 )
 
+func DrawPL(l Line, w float64, c []uint8, inp Pict) Pict {
+	ca := DrawLineL(l, w, c, inp)
+	ca = DrawPointP(l.S, w, c, ca)
+	ca = DrawPointP(l.D, w, c, ca)
+
+	return ca
+}
+
 func DrawLineP(s, d Point, w float64, c []uint8, inp Pict) Pict {
 	return DrawLine2(s.X, s.Y, d.X, d.Y, w, c, inp)
 }

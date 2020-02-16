@@ -8,7 +8,7 @@ import (
 )
 
 func main(){
-	canv := drawcircle(100)
+	canv := drawcircle(10)
 
 	canv.Save("res.png")
 }
@@ -32,7 +32,9 @@ func drawcircle(num int) pictFunc.Pict {
 	lbox[num - 1] = pictFunc.MkLineP(pbox[num - 1], pbox[0])
 
 	for i := 0; i < num; i ++ {
-		canv = pictFunc.DrawLineL(lbox[i], 3.0, []uint8{255, 0, 100, 200}, canv)
+		canv = pictFunc.DrawPL(lbox[i], 3.0, 
+			[]uint8{255, uint8(250 - 25 * i), 
+				0, uint8(25 * i)}, canv)
 	}
 
 	return canv
