@@ -8,22 +8,25 @@ import (
 )
 
 func main(){
-	canv := drawcircle(10)
+	canv := drawcircle(250.0, 7)
 
 	canv.Save("res.png")
 }
 
-func drawcircle(num int) pictFunc.Pict {
+func drawcircle(r float64, num int) pictFunc.Pict {
 
-	canv := pictFunc.Wcanvas(400, 300)
+	cw := 800
+	ch := 600
+
+	canv := pictFunc.Wcanvas(cw, ch)
 
 	pbox := pictFunc.MkPArray(num)
 	lbox := pictFunc.MkLArray(num)
 
 	for i := 0; i < num; i++ {
 		pbox[i] = pictFunc.MkPoint(
-			200.0 + 100.0 * math.Cos(2.0 * math.Pi * float64(i) / float64(num)),
-			150.0 + 100.0 * math.Sin(2.0 * math.Pi * float64(i) / float64(num)))
+			float64(cw) / 2.0 + r * math.Cos(2.0 * math.Pi * float64(i) / float64(num)),
+			float64(ch) / 2.0 + r * math.Sin(2.0 * math.Pi * float64(i) / float64(num)))
 	}
 
 	for i := 0; i < num - 1; i++ {

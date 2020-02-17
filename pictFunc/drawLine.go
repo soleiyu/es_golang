@@ -21,6 +21,8 @@ func DrawLineL(l Line, w float64, c []uint8, inp Pict) Pict {
 	return DrawLine2(l.S.X, l.S.Y, l.D.X, l.D.Y, w, c, inp)
 }
 
+func pointRatio(l Line, x, y, w, ofs float64) float64
+
 func DrawLine(x1, y1, x2, y2, w float64, c []uint8, inp Pict) Pict {
 	res := MkPict(inp.Width, inp.Height)
 
