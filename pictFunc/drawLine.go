@@ -5,8 +5,8 @@ import (
 	"math"
 )
 
-func DrawPL(l Line, w float64, c []uint8, inp Pict) Pict {
-	ca := DrawLineL(l, w, c, inp)
+func DrawPLP(l Line, w float64, c []uint8, inp Pict) Pict {
+	ca := DrawLine5(l, w, c, inp)
 	ca = DrawPointP(l.S, w, c, ca)
 	ca = DrawPointP(l.D, w, c, ca)
 
@@ -21,7 +21,41 @@ func DrawLineL(l Line, w float64, c []uint8, inp Pict) Pict {
 	return DrawLine2(l.S.X, l.S.Y, l.D.X, l.D.Y, w, c, inp)
 }
 
-func pointRatio(l Line, x, y, w, ofs float64) float64
+func pointRatio(l Line, x, y, w, ofs float64) float64 {
+	dst := queDistLine(l.S.X, l.S.Y, l.D.X, l.D.Y, x, y)
+
+	if dst < w {
+		return 1.0
+	} else if dst < w + ofs {
+		return (w + ofs - dst) / ofs
+	} else {
+		return 0.0
+	}
+}
+
+func inPointRatio(l Line, x, y, w, ofs float64) float64 {
+	dst := queDistLine(l.S.X, l.S.Y, l.D.X, l.D.Y, x, y)
+
+	if dst < w - ofs {
+		return 1.0
+	} else if dst < w {
+		return (w - dst) / ofs
+	} else {
+		return 0.0
+	}
+}
+
+func cntPointRatio(l Line, x, y, w, ofs float64) float64 {
+	dst := queDistLine(l.S.X, l.S.Y, l.D.X, l.D.Y, x, y)
+
+	if dst < w - 0.5 * ofs {
+		return 1.0
+	} else if dst < w + 0.5 * ofs {
+		return (w - (dst - 0.5 * ofs)) / ofs
+	} else {
+		return 0.0
+	}
+}
 
 func DrawLine(x1, y1, x2, y2, w float64, c []uint8, inp Pict) Pict {
 	res := MkPict(inp.Width, inp.Height)
@@ -58,6 +92,69 @@ func DrawLine2(x1, y1, x2, y2, w float64, c []uint8, inp Pict) Pict {
 					res.Px[x][y][3] = c[3]
 					continue
 				}
+			}
+			res.Px[x][y] = inp.Px[x][y]
+		}
+	}
+
+	fmt.Println("DRAW LINE")
+	return res
+}
+
+func DrawLine3(l Line, w float64, c []uint8, inp Pict) Pict {
+	res := MkPict(inp.Width, inp.Height)
+
+	for x := 0; x < inp.Width; x++ {
+		for y := 0; y < inp.Height; y++ {
+			if inner3c(l.S.X, l.S.Y, l.D.X, l.D.Y, float64(x), float64(y)) {
+				r := pointRatio(l, float64(x), float64(y), w, 1.0)
+				res.Px[x][y][0] = uint8(r * float64(c[0]) + (1.0 - r) * float64(inp.Px[x][y][0]))
+				res.Px[x][y][1] = uint8(r * float64(c[1]) + (1.0 - r) * float64(inp.Px[x][y][1]))
+				res.Px[x][y][2] = uint8(r * float64(c[2]) + (1.0 - r) * float64(inp.Px[x][y][2]))
+				res.Px[x][y][3] = uint8(r * float64(c[3]) + (1.0 - r) * float64(inp.Px[x][y][3]))
+				continue
+			}
+			res.Px[x][y] = inp.Px[x][y]
+		}
+	}
+
+	fmt.Println("DRAW LINE")
+	return res
+}
+
+func DrawLine4(l Line, w float64, c []uint8, inp Pict) Pict {
+	res := MkPict(inp.Width, inp.Height)
+
+	for x := 0; x < inp.Width; x++ {
+		for y := 0; y < inp.Height; y++ {
+			if inner3c(l.S.X, l.S.Y, l.D.X, l.D.Y, float64(x), float64(y)) {
+				r := inPointRatio(l, float64(x), float64(y), w, 1.0)
+				res.Px[x][y][0] = uint8(r * float64(c[0]) + (1.0 - r) * float64(inp.Px[x][y][0]))
+				res.Px[x][y][1] = uint8(r * float64(c[1]) + (1.0 - r) * float64(inp.Px[x][y][1]))
+				res.Px[x][y][2] = uint8(r * float64(c[2]) + (1.0 - r) * float64(inp.Px[x][y][2]))
+				res.Px[x][y][3] = uint8(r * float64(c[3]) + (1.0 - r) * float64(inp.Px[x][y][3]))
+				continue
+			}
+			res.Px[x][y] = inp.Px[x][y]
+		}
+	}
+
+	fmt.Println("DRAW LINE")
+	return res
+}
+
+func DrawLine5(l Line, w float64, c []uint8, inp Pict) Pict {
+	res := MkPict(inp.Width, inp.Height)
+
+	for x := 0; x < inp.Width; x++ {
+		for y := 0; y < inp.Height; y++ {
+			if inner3c(l.S.X, l.S.Y, l.D.X, l.D.Y, float64(x), float64(y)) {
+				r := cntPointRatio(l, float64(x), float64(y), w, 1.0)
+				res.Px[x][y][0] = uint8(r * float64(c[0]) + (1.0 - r) * float64(inp.Px[x][y][0]))
+				res.Px[x][y][1] = uint8(r * float64(c[1]) + (1.0 - r) * float64(inp.Px[x][y][1]))
+				res.Px[x][y][2] = uint8(r * float64(c[2]) + (1.0 - r) * float64(inp.Px[x][y][2]))
+				res.Px[x][y][3] = uint8(r * float64(c[3]) + (1.0 - r) * float64(inp.Px[x][y][3]))
+				continue
 			}
 			res.Px[x][y] = inp.Px[x][y]
 		}
