@@ -4,6 +4,7 @@ package main
 
 import (
 	"./pictFunc"
+	"./emsFunc"
 	"math"
 )
 
@@ -11,10 +12,9 @@ func main(){
 	canv := pictFunc.Wcanvas(800, 600)
 	canv = drawcircle(200.0, 4, canv)
 	canv = drawcircle(220.0, 5, canv)
-	canv = drawcircle(240.0, 6, canv)
-	canv = drawcircle(260.0, 7, canv)
-	canv = drawcircle(280.0, 8, canv)
-	canv = drawcircle(300.0, 9, canv)
+
+	emf := emsFunc.MkField()
+	emf.AddEp(emsFunc.MkEPoint(200, 400, 1.0))
 
 	canv.Save("res.png")
 }
