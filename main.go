@@ -9,12 +9,21 @@ import (
 )
 
 func main(){
-	canv := pictFunc.Wcanvas(800, 600)
-	canv = drawcircle(200.0, 4, canv)
-	canv = drawcircle(220.0, 5, canv)
+//	canv := pictFunc.Wcanvas(800, 600)
+//	canv = drawcircle(200.0, 4, canv)
+//	canv = drawcircle(220.0, 5, canv)
 
 	emf := emsFunc.MkField()
-	emf.AddEp(emsFunc.MkEPoint(200, 400, 1.0))
+	emf.AddEp(emsFunc.MkEPoint(400, 200, 30.0))
+	emf.AddEp(emsFunc.MkEPoint(200, 400, -30.0))
+	emf.AddEp(emsFunc.MkEPoint(400, 600, 30.0))
+	emf.AddEp(emsFunc.MkEPoint(800, 200, -30.0))
+	emf.AddEp(emsFunc.MkEPoint(1000, 400, 30.0))
+	emf.AddEp(emsFunc.MkEPoint(800, 600, -30.0))
+
+	canv := emf.DrawEPField(1200, 800)
+
+	canv = emf.DrawMGMesh(10, 5, canv)
 
 	canv.Save("res.png")
 }

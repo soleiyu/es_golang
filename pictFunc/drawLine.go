@@ -160,7 +160,6 @@ func DrawLine5(l Line, w float64, c []uint8, inp Pict) Pict {
 		}
 	}
 
-	fmt.Println("DRAW LINE")
 	return res
 }
 

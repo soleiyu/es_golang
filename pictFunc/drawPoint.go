@@ -1,7 +1,6 @@
 package pictFunc
 
 import (
-	"fmt"
 	"math"
 )
 
@@ -21,7 +20,6 @@ func DrawPointP(p Point, w float64, c []uint8, inp Pict) Pict {
 		}
 	}
 
-	fmt.Println("DRAW POINT")
 	return res
 }
 
