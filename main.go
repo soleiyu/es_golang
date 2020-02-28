@@ -23,7 +23,8 @@ func main(){
 
 	canv := emf.DrawEPField(1200, 800)
 
-	canv = emf.DrawMGMesh(10, 5, canv)
+//	canv = emf.DrawMGMesh(50, 25, canv)
+	canv = emf.DrawMGMesh2(50, 25, canv)
 
 	canv.Save("res.png")
 }

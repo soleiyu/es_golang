@@ -5,6 +5,27 @@ import (
 	"math"
 )
 
+func DrawLines(l []Line, w []float64, c [][]uint8, inp Pict) Pict {
+	res := Wcanvas(inp.Width, inp.Height)
+	res = inp
+
+	for x := 0; x < inp.Width; x++ {
+		for y := 0; y < inp.Height; y++ {
+			for i := 0; i < len(l); i ++ {
+				if inner3c(l[i].S.X, l[i].S.Y, l[i].D.X, l[i].D.Y, float64(x), float64(y)) {
+					r := cntPointRatio(l[i], float64(x), float64(y), w[i], 1.0)
+					res.Px[x][y][0] = uint8(r * float64(c[i][0]) + (1.0 - r) * float64(res.Px[x][y][0]))
+					res.Px[x][y][1] = uint8(r * float64(c[i][1]) + (1.0 - r) * float64(res.Px[x][y][1]))
+					res.Px[x][y][2] = uint8(r * float64(c[i][2]) + (1.0 - r) * float64(res.Px[x][y][2]))
+					res.Px[x][y][3] = uint8(r * float64(c[i][3]) + (1.0 - r) * float64(res.Px[x][y][3]))
+				}
+			}
+		}
+	}
+
+	return res
+}
+
 func DrawPLP(l Line, w float64, c []uint8, inp Pict) Pict {
 	ca := DrawLine5(l, w, c, inp)
 	ca = DrawPointP(l.S, w, c, ca)

@@ -98,6 +98,30 @@ func (this *Field) CalcMGV(inp pictFunc.Point) pictFunc.Point {
 	return pictFunc.MkPoint(x, y)
 }
 
+func (this *Field) DrawMGMesh2(pitch, ofs float64, inp pictFunc.Pict) pictFunc.Pict {
+	res := inp
+
+	lb := make([]pictFunc.Line, 0)
+	cb := make([][]uint8, 0)
+	wb := make([]float64, 0)
+
+	for x := ofs; x < float64(inp.Width); x += pitch {
+		for y := ofs; y < float64(inp.Height); y += pitch {
+			epos := MkEPoint(x, y, 1)
+			mgl := this.CalcMGVLS(epos.Pnt, 7)
+			lb = append(lb, mgl)
+			cb = append(cb, []uint8{255, 0, 255, 0})
+			wb = append(wb, 1.0)
+
+			fmt.Println(x, y)
+		}
+	}
+
+	res = pictFunc.DrawLines(lb, wb, cb, inp)
+
+	return res
+}
+
 func (this *Field) DrawMGMesh(pitch, ofs float64, inp pictFunc.Pict) pictFunc.Pict {
 	res := inp
 
