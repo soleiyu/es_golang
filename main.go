@@ -18,13 +18,14 @@ func main(){
 	emf.AddEp(emsFunc.MkEPoint(200, 400, -30.0))
 	emf.AddEp(emsFunc.MkEPoint(400, 600, 30.0))
 	emf.AddEp(emsFunc.MkEPoint(800, 200, -30.0))
-	emf.AddEp(emsFunc.MkEPoint(1000, 400, 30.0))
+	emf.AddEp(emsFunc.MkEPoint(600, 400, 30.0))
 	emf.AddEp(emsFunc.MkEPoint(800, 600, -30.0))
 
 	canv := emf.DrawEPField(1200, 800)
 
 //	canv = emf.DrawMGMesh(50, 25, canv)
-	canv = emf.DrawMGMesh2(50, 25, canv)
+//	canv = emf.DrawMGMesh2(50, 25, canv)
+	canv = emf.DrawMGMesh2MM(10, 5, canv)
 
 	canv.Save("res.png")
 }

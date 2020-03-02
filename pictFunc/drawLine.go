@@ -26,6 +26,39 @@ func DrawLines(l []Line, w []float64, c [][]uint8, inp Pict) Pict {
 	return res
 }
 
+func DrawMMLines(l []MMLine, c [][]uint8, inp Pict) Pict {
+	res := Wcanvas(inp.Width, inp.Height)
+	res = inp
+
+	for x := 0; x < inp.Width; x++ {
+		for y := 0; y < inp.Height; y++ {
+			for i := 0; i < len(l); i ++ {
+
+				if float64(x) < l[i].Minx {
+					continue
+				} else if l[i].Maxx < float64(x) {
+					continue
+				} else if float64(y) < l[i].Miny {
+					continue
+				} else if l[i].Maxy < float64(y) {
+					continue
+				}
+
+
+				if inner3c(l[i].S.X, l[i].S.Y, l[i].D.X, l[i].D.Y, float64(x), float64(y)) {
+					r := cntPointRatioMM(l[i], float64(x), float64(y), 1.0)
+					res.Px[x][y][0] = uint8(r * float64(c[i][0]) + (1.0 - r) * float64(res.Px[x][y][0]))
+					res.Px[x][y][1] = uint8(r * float64(c[i][1]) + (1.0 - r) * float64(res.Px[x][y][1]))
+					res.Px[x][y][2] = uint8(r * float64(c[i][2]) + (1.0 - r) * float64(res.Px[x][y][2]))
+					res.Px[x][y][3] = uint8(r * float64(c[i][3]) + (1.0 - r) * float64(res.Px[x][y][3]))
+				}
+			}
+		}
+	}
+
+	return res
+}
+
 func DrawPLP(l Line, w float64, c []uint8, inp Pict) Pict {
 	ca := DrawLine5(l, w, c, inp)
 	ca = DrawPointP(l.S, w, c, ca)
@@ -61,6 +94,18 @@ func inPointRatio(l Line, x, y, w, ofs float64) float64 {
 		return 1.0
 	} else if dst < w {
 		return (w - dst) / ofs
+	} else {
+		return 0.0
+	}
+}
+
+func cntPointRatioMM(l MMLine, x, y, ofs float64) float64 {
+	dst := queDistLine(l.S.X, l.S.Y, l.D.X, l.D.Y, x, y)
+
+	if dst < l.W - 0.5 * ofs {
+		return 1.0
+	} else if dst < l.W + 0.5 * ofs {
+		return (l.W - (dst - 0.5 * ofs)) / ofs
 	} else {
 		return 0.0
 	}
@@ -178,6 +223,37 @@ func DrawLine5(l Line, w float64, c []uint8, inp Pict) Pict {
 				continue
 			}
 			res.Px[x][y] = inp.Px[x][y]
+		}
+	}
+
+	return res
+}
+
+func DrawLine6(l MMLine, c []uint8, inp Pict) Pict {
+	res := inp
+
+	for x := 0; x < inp.Width; x++ {
+		if float64(x) < l.Minx {
+			continue
+		} else if l.Maxx < float64(x) {
+			break
+		}
+
+		for y := 0; y < inp.Height; y++ {
+			if float64(y) < l.Miny {
+				continue
+			} else if l.Maxy < float64(y) {
+				break
+			}
+
+			if inner3c(l.S.X, l.S.Y, l.D.X, l.D.Y, float64(x), float64(y)) {
+				r := cntPointRatioMM(l, float64(x), float64(y), 1.0)
+				res.Px[x][y][0] = uint8(r * float64(c[0]) + (1.0 - r) * float64(inp.Px[x][y][0]))
+				res.Px[x][y][1] = uint8(r * float64(c[1]) + (1.0 - r) * float64(inp.Px[x][y][1]))
+				res.Px[x][y][2] = uint8(r * float64(c[2]) + (1.0 - r) * float64(inp.Px[x][y][2]))
+				res.Px[x][y][3] = uint8(r * float64(c[3]) + (1.0 - r) * float64(inp.Px[x][y][3]))
+				continue
+			}
 		}
 	}
 

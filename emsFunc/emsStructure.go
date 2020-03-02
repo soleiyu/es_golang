@@ -122,6 +122,29 @@ func (this *Field) DrawMGMesh2(pitch, ofs float64, inp pictFunc.Pict) pictFunc.P
 	return res
 }
 
+func (this *Field) DrawMGMesh2MM(pitch, ofs float64, inp pictFunc.Pict) pictFunc.Pict {
+	res := inp
+
+	lb := make([]pictFunc.MMLine, 0)
+	cb := make([][]uint8, 0)
+
+	for x := ofs; x < float64(inp.Width); x += pitch {
+		for y := ofs; y < float64(inp.Height); y += pitch {
+			epos := MkEPoint(x, y, 1)
+			mgl := this.CalcMGVLS(epos.Pnt, 10)
+			mmmgl := pictFunc.MkMMLineL(1.0, mgl)
+			lb = append(lb, mmmgl)
+			cb = append(cb, []uint8{255, 0, 255, 0})
+
+//			fmt.Println(x, y)
+		}
+	}
+
+	res = pictFunc.DrawMMLines(lb, cb, inp)
+
+	return res
+}
+
 func (this *Field) DrawMGMesh(pitch, ofs float64, inp pictFunc.Pict) pictFunc.Pict {
 	res := inp
 
